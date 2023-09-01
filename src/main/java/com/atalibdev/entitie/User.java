@@ -14,8 +14,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String username;
+    //private String lastName;
     private String email;
     private boolean isEnabled = false;
     private String password;
@@ -27,10 +27,9 @@ public class User {
     )
     private Collection<Role> roles;
 
-    public User(String firstName, String lastName, String email,
+    public User(String username, String email,
                 String password, Collection<Role> roles) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;

@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(RegistrationRequest request) {
-        var user = new User(request.getFirstName(), request.getLastName(),
+        var user = new User(request.getUsername(),
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()),
                 List.of(new Role("ROLE_USER")));
@@ -44,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(Long id, String firstName, String lastName, String email) {
+    public void updateUser(Long id, String username, String email) {
 
     }
 
