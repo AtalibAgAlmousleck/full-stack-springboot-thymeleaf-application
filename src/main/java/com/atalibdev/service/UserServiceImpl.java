@@ -4,9 +4,11 @@ import com.atalibdev.entitie.Role;
 import com.atalibdev.entitie.User;
 import com.atalibdev.repository.UserRepository;
 import com.atalibdev.request.RegistrationRequest;
+import com.atalibdev.token.VerificationTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationTokenService verificationTokenService;
 
     @Override
     public List<User> getAllUsers() {
@@ -34,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return Optional.empty();
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -42,13 +45,18 @@ public class UserServiceImpl implements UserService {
         return Optional.empty();
     }
 
+    @Transactional
     @Override
     public void updateUser(Long id, String username, String email) {
-
+        userRepository.update(username, email, id);
     }
 
+    @Transactional
     @Override
     public void deleteUser(Long id) {
-
+        Optional<User> user = userRepository.findById(id);
+        user.ifPresent(theUser -> verificationTokenService
+                .deleteUserToken(theUser.getId()));
+        userRepository.deleteById(id);
     }
 }
